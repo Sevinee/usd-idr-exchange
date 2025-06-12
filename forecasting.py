@@ -472,11 +472,13 @@ forecast_7day = scaler.inverse_transform(predictions_scaled)
 for i, nilai in enumerate(forecast_7day):
     print(f"Hari ke-{i+1}: {nilai}")
 
+df_fc = df_final.copy()
+
 # Forecast
 df_forecast = pd.DataFrame(forecast_7day[:, 0], columns = ['Exchange Rate USD/IDR'])
 
 # Tentukan tanggal mulai berdasarkan data historis terakhir
-start_date_forecast = df_exchange.index[-1] + pd.Timedelta(days=1)
+start_date_forecast = df_fc.index[-1] + pd.Timedelta(days=1)
 
 # Buat rentang tanggal hanya hari kerja (weekday < 5)
 forecast_dates = pd.date_range(start=start_date_forecast, periods=len(df_forecast)*2, freq='D')

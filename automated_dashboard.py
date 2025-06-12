@@ -44,10 +44,15 @@ st.title("📈 Dashboard Prediksi Nilai Tukar USD/IDR")
 st.caption("Prediksi nilai tukar untuk 7 hari ke depan berdasarkan data 30 hari terakhir")
 
 # ====== GRAFIK UTAMA ======
-fig = px.line(data, x='date', y='value', color='type',
+# Filter data 30 hari terakhir + 7 hari ke depan untuk tampilan utama
+last_actual_date = actual_data['date'].max()
+visual_data = data[data['date'] >= last_actual_date - pd.Timedelta(days=30)]
+
+fig = px.line(visual_data, x='date', y='value', color='type',
               line_dash='type',
               labels={'value': 'Nilai Tukar (Rp)', 'date': 'Tanggal'},
-              title='Nilai Tukar USD/IDR - Aktual dan Prediksi')
+              title='Nilai Tukar USD/IDR - Aktual dan Prediksi (30 Hari + Forecast)')
+
 
 fig.update_traces(mode="lines+markers", hovertemplate='Tanggal: %{x|%d %b %Y}<br>Nilai: Rp %{y:,.2f}')
 st.plotly_chart(fig, use_container_width=True)
