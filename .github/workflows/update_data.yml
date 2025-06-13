@@ -30,14 +30,14 @@ jobs:
 
       - name: Commit and Force Push Overwrite
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          
+          git config --global user.name github-actions
+          git config --global user.email github-actions@github.com
+
           git fetch origin main
-          git checkout -B main origin/main  # Buat ulang branch main dari remote, buang rebase
-          
+          git checkout origin/main
+          git switch -c temp-overwrite-branch
+
           git add *.csv *.npy *.save || true
           git commit -m "Auto update CSV $(date +'%Y-%m-%d')" || echo "Nothing to commit"
-          
-          git push --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" main
 
+          git push --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" HEAD:main
