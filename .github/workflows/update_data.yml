@@ -2,7 +2,7 @@ name: Run Daily Forecast
 
 on:
   schedule:
-    - cron: '0 02 * * *'  # Jam 9.00 WIB
+    - cron: '0 12 * * *'  # Jam 19.00 WIB
   workflow_dispatch:
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # penting agar bisa reset
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -26,16 +26,22 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run fetch script
-        run: python fetch_data.py  # Hanya simpan raw_data.csv
+        run: python fetch_data.py
 
       - name: Run forecast script
-        run: python forecast.py    # Baca raw_data.csv dan simpan hasil ke hasil_forecast.csv
+        run: python forecast.py
 
       - name: Commit and Push CSV results
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
 
+          # force sync to remote/main to avoid merge conflict
+          git fetch origin
+          git reset --hard origin/main
+
+          # only add csv files
           git add *.csv || true
           git commit -m "Auto update CSV $(date +'%Y-%m-%d')" || echo "Nothing to commit"
+
           git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
