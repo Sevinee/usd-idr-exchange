@@ -7,6 +7,31 @@ Original file is located at
     https://colab.research.google.com/drive/1stswANnyoPpiHkFn-AnYI6Sp1z1OwLPe
 """
 
+# ===============================
+# Library
+# ===============================
+import pandas as pd
+import numpy as np
+import yfinance as yf
+import matplotlib.pyplot as plt
+import requests
+import warnings
+warnings.filterwarnings("ignore")
+from datetime import datetime
+from math import sqrt
+from numpy import concatenate
+from matplotlib import pyplot
+from pandas import read_excel
+from pandas import DataFrame
+from pandas import concat
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import mean_squared_error
+from keras.models import Sequential,load_model
+from keras.layers import Dense
+from keras.layers import LSTM
+
 # Load semua yang diperlukan
 import pandas as pd
 import numpy as np

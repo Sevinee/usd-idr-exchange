@@ -8,10 +8,36 @@ Original file is located at
 """
 
 # ===============================
+# Library
+# ===============================
+import pandas as pd
+import numpy as np
+import yfinance as yf
+import matplotlib.pyplot as plt
+import joblib
+import requests
+import warnings
+warnings.filterwarnings("ignore")
+from datetime import datetime
+from math import sqrt
+from numpy import concatenate
+from matplotlib import pyplot
+from pandas import read_excel
+from pandas import DataFrame
+from pandas import concat
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import mean_squared_error
+from keras.models import Sequential,load_model
+from keras.layers import Dense
+from keras.layers import LSTM
+
+# ===============================
 # 1. Ambil Data Crude Oil, Emas, dan Kurs USD/IDR
 # ===============================
 start_date = '2010-01-01'
-end_date = '2025-01-01'
+end_date = datetime.today().strftime('%Y-%m-%d')
 
 crude_oil = yf.download('CL=F', start=start_date, end=end_date)['Close']
 gold = yf.download('GC=F', start=start_date, end=end_date)['Close']
