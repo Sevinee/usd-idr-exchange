@@ -40,11 +40,47 @@ import joblib
 # Data asli (untuk gabung hasil prediksi)
 df_final = pd.read_csv("preprocessed_actual_data.csv", parse_dates=["date"], index_col="date")
 
-# Data input ke model
-scaled = np.load("scaled_data.npy")
+"""#Preprocessing"""
 
-# Scaler untuk inverse transform nanti
-scaler = joblib.load("scaler.save")
+# Mnghilangkan outlier pada usd_idr
+for index in df_final.index:
+    if df_final.loc[index, "usd_idr"] < 1000:
+        df_final.loc[index, "usd_idr"] = 10 * df_final.loc[index, "usd_idr"]
+
+for index in df_final.index:
+    if df_final.loc[index, "crude_oil"] < 0:
+        df_final.loc[index, "crude_oil"] = 17.73
+
+# Ubah df_final menjadi array
+values = df_final.values
+values
+
+# Normalisasi fitur
+scaler = MinMaxScaler(feature_range=(0, 1))
+scaled = scaler.fit_transform(values)
+scaled
+
+# Plot untuk setiap fitur
+plot_columns = {
+    'gold': 'Gold Price',
+    'crude_oil': 'Crude Oil Price',
+    'usd_idr': 'USD/IDR Exchange Rate',
+    'inflation': 'Inflation Rate'
+}
+
+fig, axes = plt.subplots(2, 2, figsize=(14, 8))
+axes = axes.flatten()
+
+for i, (col, ylabel) in enumerate(plot_columns.items()):
+    axes[i].plot(df_final.index, df_final[col])
+    axes[i].set_title(f'{ylabel} Over Time')
+    axes[i].set_xlabel('Date')
+    axes[i].set_ylabel(ylabel)
+    axes[i].grid(True)
+    axes[i].tick_params(axis='x', rotation=45)
+
+plt.tight_layout()
+plt.show()
 
 """#LSTM"""
 

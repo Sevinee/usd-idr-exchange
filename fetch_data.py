@@ -96,53 +96,5 @@ df_final.dropna(inplace=True)
 # Tampilkan hasil
 df_final.head()
 
-"""#Preprocessing"""
-
-# Mnghilangkan outlier pada usd_idr
-for index in df_final.index:
-    if df_final.loc[index, "usd_idr"] < 1000:
-        df_final.loc[index, "usd_idr"] = 10 * df_final.loc[index, "usd_idr"]
-
-for index in df_final.index:
-    if df_final.loc[index, "crude_oil"] < 0:
-        df_final.loc[index, "crude_oil"] = 17.73
-
-# Ubah df_final menjadi array
-values = df_final.values
-values
-
-# Normalisasi fitur
-scaler = MinMaxScaler(feature_range=(0, 1))
-scaled = scaler.fit_transform(values)
-scaled
-
-# Plot untuk setiap fitur
-plot_columns = {
-    'gold': 'Gold Price',
-    'crude_oil': 'Crude Oil Price',
-    'usd_idr': 'USD/IDR Exchange Rate',
-    'inflation': 'Inflation Rate'
-}
-
-fig, axes = plt.subplots(2, 2, figsize=(14, 8))
-axes = axes.flatten()
-
-for i, (col, ylabel) in enumerate(plot_columns.items()):
-    axes[i].plot(df_final.index, df_final[col])
-    axes[i].set_title(f'{ylabel} Over Time')
-    axes[i].set_xlabel('Date')
-    axes[i].set_ylabel(ylabel)
-    axes[i].grid(True)
-    axes[i].tick_params(axis='x', rotation=45)
-
-plt.tight_layout()
-plt.show()
-
 # Simpan dataframe mentah yang sudah dibersihkan
 df_final.to_csv("preprocessed_actual_data.csv", index_label="date")
-
-# Simpan scaled array untuk input ke model
-np.save("scaled_data.npy", scaled)
-
-# Simpan scaler
-joblib.dump(scaler, "scaler.save")
